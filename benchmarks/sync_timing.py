@@ -34,7 +34,7 @@ print("Tracing for quick sync's... Ctrl-C to end.")
 start = 0
 while True:
     try:
-        (task, pid, cpu, flags, ts, msg) = b.trace_fields()
+        (task, pid, cpu, flags, ts, ms) = b.trace_fields()
         if start == 0:
             start = ts
         ts = ts - start
