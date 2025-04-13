@@ -12,8 +12,10 @@ struct data_t {
     u32 pid;
     u64 ts;
     char comm[TASK_COMM_LEN];
-}
+};
+
 BPF_PERF_OUTPUT(events);
+
 int hello(struct pt_regs *ctx) {
     struct data_t data = {};
     data.pid = bpf_get_current_pid_tgid();
@@ -26,7 +28,7 @@ int hello(struct pt_regs *ctx) {
 }
 """
 b = BPF(text=prog)
-b.attach_kprobe(event="clone", fn_name="hello")
+b.attach_kprobe(event=b.get_syscall_fnname("clone"), fn_name="hello")
 print("Tracing clone syscall... Ctrl-C to end.")
 print("%-18s %-16s %-6s %s" % ("TIME(s)", "COMM", "PID", "MESSAGE"))
 start = 0

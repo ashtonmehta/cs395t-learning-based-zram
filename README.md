@@ -8,8 +8,11 @@ sudo apt-get install bpfcc-tools linux-headers-$(uname -r)
 ssh-keygen -t ed25519 -C "your_email@example.com"
 
 eval "$(ssh-agent -s)"
+
 ssh-add ~/.ssh/id_ed25519
+
 cat ~/.ssh/id_ed25519.pub
+
 add public key to github
 
 ### Run BCC Script
