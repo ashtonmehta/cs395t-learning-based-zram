@@ -15,6 +15,17 @@ cat ~/.ssh/id_ed25519.pub
 
 add public key to github
 
+### Enable ZRAM
+sudo modprobe zram
+https://fosspost.org/enable-zram-on-linux-better-system-performance
+
+sudo cat /proc/kallsyms | grep zram
+sudo sysctl vm.swappiness=80
+watch -n 1 cat /proc/swaps
+stress-ng --vm 2 --vm-bytes 120% --timeout 60s
+free -h
+
+
 ### Run BCC Script
 chmod +x script_name.py
 sudo ./script_name.py

@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 from bcc import BPF
+import time
 
 bpf_text = """
 #include <uapi/linux/ptrace.h>
@@ -31,14 +32,18 @@ int trace_read_compressed_page(struct pt_regs *ctx) {
 # Load BPF program
 b = BPF(text=bpf_text)
 
-# Attach kprobe to read_compressed_page in zram_drv.c
-b.attach_kprobe(event="read_compressed_page" , fn_name="trace_read_compressed_page")
+# Attach kprobe to zcomp_decompress in zram_drv.c
+b.attach_kprobe(event="zcomp_decompress" , fn_name="trace_read_compressed_page")
+print("timestamp,compressed_page_reads (cumulative)")
 print("Tracking compressed page reads... Press Ctrl-C to exit.")
 
 try:
     while True:
+        time.sleep(1)
         count_map = b.get_table("compressed_reads")
+        count = 0
         for k, v in count_map.items():
-            print("Compressed page reads: {}".format(v.value))
+            count = v.value
+        print("{},{}".format(time.time(), count))
 except KeyboardInterrupt:
     exit()
